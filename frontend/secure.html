@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Lab - Secure Application</title>
+    <link rel="stylesheet" href="secure-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 Security Lab - Secure Application</h1>
+            <p class="success-message">✅ This application implements security best practices</p>
+            <div class="server-status">
+                <span id="server-status">🔗 Connecting to secure server...</span>
+            </div>
+        </header>
+
+        <!-- Login Section -->
+        <section class="section" id="login-section">
+            <h2>🔐 Secure Login System</h2>
+            <form id="login-form" autocomplete="off">
+                <div class="input-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" 
+                           required maxlength="50" pattern="[a-zA-Z0-9_]+" 
+                           title="Only letters, numbers, and underscores allowed">
+                    <small>Alphanumeric characters and underscores only</small>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" 
+                           required maxlength="100">
+                </div>
+                <button type="submit" id="login-btn">🔑 Login Securely</button>
+            </form>
+            
+            <div class="demo-credentials">
+                <h4>Demo Credentials:</h4>
+                <div class="credential-item">
+                    <strong>Regular User:</strong> john / password
+                </div>
+                <div class="credential-item">
+                    <strong>Admin User:</strong> admin / admin123
+                </div>
+            </div>
+            
+            <div class="security-features">
+                <h4>🛡️ Security Features Implemented:</h4>
+                <ul>
+                    <li>✅ Rate limiting (5 attempts per 15 minutes)</li>
+                    <li>✅ Input validation and sanitization</li>
+                    <li>✅ Prepared statements (SQL injection prevention)</li>
+                    <li>✅ JWT token authentication</li>
+                    <li>✅ Generic error messages</li>
+                    <li>✅ HTTPS-ready configuration</li>
+                </ul>
+            </div>
+            
+            <div id="login-result"></div>
+        </section>
+
+        <!-- Profile Section -->
+        <section class="section" id="profile-section" style="display: none;">
+            <h2>👤 Secure Profile Management</h2>
+            <div class="user-info">
+                <p><strong>Welcome:</strong> <span id="current-username">-</span></p>
+                <p><strong>Role:</strong> <span id="current-role">-</span></p>
+                <p><strong>User ID:</strong> <span id="current-user-id">-</span></p>
+            </div>
+            
+            <div class="profile-actions">
+                <button onclick="loadMyProfile()" class="btn-primary">📄 View My Profile</button>
+                <div id="admin-controls" style="display: none;">
+                    <hr>
+                    <h4>👑 Admin Controls:</h4>
+                    <input type="number" id="admin-user-id" placeholder="Enter User ID" min="1" max="999">
+                    <button onclick="loadUserProfile()" class="btn-admin">🔍 View Any User Profile</button>
+                    <button onclick="loadAllUsers()" class="btn-admin">👥 View All Users</button>
+                </div>
+            </div>
+            
+            <div class="security-features">
+                <h4>🛡️ IDOR Protection:</h4>
+                <ul>
+                    <li>✅ JWT token validation required</li>
+                    <li>✅ Authorization checks (users can only access their own data)</li>
+                    <li>✅ Admin role verification for administrative access</li>
+                    <li>✅ Input validation on user ID parameters</li>
+                </ul>
+            </div>
+            
+            <div id="profile-result"></div>
+        </section>
+
+        <!-- Comments Section -->
+        <section class="section">
+            <h2>💬 Secure Comment System</h2>
+            <div id="comment-form-container" style="display: none;">
+                <form id="comment-form">
+                    <div class="input-group">
+                        <label for="comment-content">Your Comment:</label>
+                        <textarea id="comment-content" name="content" placeholder="Write your secure comment..." 
+                                  rows="4" required maxlength="1000" 
+                                  title="Maximum 1000 characters, no script tags allowed"></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/1000 characters
+                            <span id="char-warning" style="display: none;">⚠️ Approaching limit</span>
+                        </div>
+                    </div>
+                    <button type="submit">💬 Post Secure Comment</button>
+                </form>
+            </div>
+            
+            <div class="security-features">
+                <h4>🛡️ XSS Protection:</h4>
+                <ul>
+                    <li>✅ HTML encoding of all user input</li>
+                    <li>✅ Input length validation (max 1000 chars)</li>
+                    <li>✅ Forbidden word filtering</li>
+                    <li>✅ Authentication required to post</li>
+                    <li>✅ Content sanitization before database storage</li>
+                </ul>
+                <div class="xss-demo">
+                    <p><strong>Try XSS payloads - they will be safely encoded:</strong></p>
+                    <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code><br>
+                    <code>&lt;img src=x onerror=alert('XSS')&gt;</code><br>
+                    <code>&lt;svg onload=alert('XSS')&gt;</code>
+                </div>
+            </div>
+            
+            <div id="comments-display">
+                <p>Loading comments...</p>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="section">
+            <h2>🔍 Secure Product Search</h2>
+            <form id="search-form">
+                <div class="input-group">
+                    <label for="search-input">Search Products:</label>
+                    <input type="text" id="search-input" name="search" placeholder="Enter product name..." 
+                           maxlength="100" pattern="[a-zA-Z0-9\s\-_]+" 
+                           title="Only letters, numbers, spaces, hyphens, and underscores allowed">
+                    <small>Alphanumeric characters, spaces, hyphens, and underscores only</small>
+                </div>
+                <button type="submit">🔍 Search Safely</button>
+            </form>
+            
+            <div class="security-features">
+                <h4>🛡️ SQL Injection Protection:</h4>
+                <ul>
+                    <li>✅ Prepared statements with parameterized queries</li>
+                    <li>✅ Input validation and character filtering</li>
+                    <li>✅ Maximum length restrictions</li>
+                    <li>✅ No direct SQL query construction</li>
+                </ul>
+                <div class="sql-demo">
+                    <p><strong>Try SQL injection payloads - they will be blocked:</strong></p>
+                    <code>' OR '1'='1'; --</code><br>
+                    <code>' UNION SELECT * FROM Users; --</code><br>
+                    <code>'; DROP TABLE Products; --</code>
+                </div>
+            </div>
+            
+            <div id="search-results"></div>
+        </section>
+
+        <!-- Security Comparison -->
+        <section class="section">
+            <h2>📊 Security Implementation Comparison</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Security Aspect</th>
+                            <th class="vulnerable">❌ Vulnerable Version</th>
+                            <th class="secure">✅ Secure Version</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SQL Injection</strong></td>
+                            <td class="vulnerable">String concatenation</td>
+                            <td class="secure">Prepared statements</td>
+                            <td>Prevents data theft and manipulation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XSS Prevention</strong></td>
+                            <td class="vulnerable">Raw HTML output</td>
+                            <td class="secure">HTML encoding + validation</td>
+                            <td>Prevents script execution and session hijacking</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IDOR Protection</strong></td>
+                            <td class="vulnerable">No access control</td>
+                            <td class="secure">Authorization checks</td>
+                            <td>Prevents unauthorized data access</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Authentication</strong></td>
+                            <td class="vulnerable">No token validation</td>
+                            <td class="secure">JWT tokens with expiry</td>
+                            <td>Secure session management</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Limiting</strong></td>
+                            <td class="vulnerable">None</td>
+                            <td class="secure">5 login attempts per 15min</td>
+                            <td>Prevents brute force attacks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Input Validation</strong></td>
+                            <td class="vulnerable">None</td>
+                            <td class="secure">Server-side validation</td>
+                            <td>Prevents malformed data attacks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Error Messages</strong></td>
+                            <td class="vulnerable">Detailed errors</td>
+                            <td class="secure">Generic error messages</td>
+                            <td>Prevents information disclosure</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Headers</strong></td>
+                            <td class="vulnerable">None</td>
+                            <td class="secure">Helmet.js implementation</td>
+                            <td>Multiple attack vector protection</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Security Testing Dashboard -->
+        <section class="section">
+            <h2>🧪 Security Testing Dashboard</h2>
+            <p class="info-message">Click the buttons below to test various security features:</p>
+            
+            <div class="test-grid">
+                <div class="test-card">
+                    <h4>🛡️ SQL Injection Test</h4>
+                    <p>Test if the search function prevents SQL injection attacks</p>
+                    <button onclick="testSQLInjection()" class="btn-test">Run SQL Test</button>
+                    <div id="sql-test-result" class="test-result"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>🚫 XSS Test</h4>
+                    <p>Test if comments are properly encoded to prevent XSS</p>
+                    <button onclick="testXSS()" class="btn-test">Run XSS Test</button>
+                    <div id="xss-test-result" class="test-result"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>🔐 IDOR Test</h4>
+                    <p>Test if unauthorized profile access is prevented</p>
+                    <button onclick="testIDOR()" class="btn-test">Run IDOR Test</button>
+                    <div id="idor-test-result" class="test-result"></div>
+                </div>
+                
+                <div class="test-card">
+                    <h4>⏱️ Rate Limiting Test</h4>
+                    <p>Test if multiple login attempts are limited</p>
+                    <button onclick="testRateLimit()" class="btn-test">Run Rate Test</button>
+                    <div id="rate-test-result" class="test-result"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="secure-script.js"></script>
+</body>
+</html>
