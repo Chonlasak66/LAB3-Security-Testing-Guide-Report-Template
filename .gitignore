@@ -33,9 +33,7 @@ coverage/
 # Database backup
 *.bak
 
-# Screenshots and reports (if not needed in repo)
-screenshots/
-SECURITY_TEST_REPORT.md
+
 
 # Misc
 *.tgz
